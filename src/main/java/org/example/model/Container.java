@@ -1,9 +1,41 @@
 package org.example.model;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Objects;
 
-public class Container<T> {
-    class Node {
+public class Container<T>{
+
+
+    public T delete(T value) {
+        Node temp = head;
+        while (temp.next!=null){
+            if(temp.next.value.equals(value)){
+                Node node = temp.next;
+                temp.next = temp.next.next;
+                size--;
+                return node.value;
+            }
+            temp = temp.next;
+        }
+        return null;
+    }
+
+    public T deleteAt(Integer index) {
+        if(index == 0 && size > 0){
+            Node node = head.next;
+            head.next = head.next.next;
+            size--;
+            return node.value;
+        }
+        Node node = findNode(index - 1);
+        Node res = node.next;
+        size--;
+        node.next = node.next.next;
+        return res.value;
+    }
+
+    private class Node {
         private T value;
         private Node next;
 
@@ -11,7 +43,8 @@ public class Container<T> {
             System.out.println("Node(T value)");
             this.value = value;
         }
-        Node(){
+
+        Node() {
             System.out.println("Node()");
         }
         //for tests
@@ -39,13 +72,13 @@ public class Container<T> {
     private Node tail;
     private int size;
 
-    Container(){
+    Container() {
         System.out.println("Container()");
         head = new Node();
         tail = head;
     }
 
-    Container(T ... values){
+    Container(T... values) {
         head = new Node();
         tail = head;
         for (T value : values) {
@@ -60,18 +93,19 @@ public class Container<T> {
         tail = tail.next;
         size++;
     }
+
     //Вставка в середину списка
     public void add(T element, int index) {
         System.out.println("public void add(T element, int index)");
         if (index == 0 && size > 0) {
             size++;
             Node node = new Node(element);
-            node.next = head;
-            head = node;
+            node.next = head.next;
+            head.next = node;
             return;
         }
         Node preNode = findNode(index - 1);
-        if(preNode.next == null){
+        if (preNode.next == null) {
             throw new IndexOutOfBoundsException("out of capacity");//todo
         }
         size++;
@@ -79,6 +113,7 @@ public class Container<T> {
         node.next = preNode.next;
         preNode.next = node;
     }
+
     //Вставка в начало списка
     public void addFirst(T element) {
         System.out.println("public void addFirst(T element)");
@@ -87,32 +122,50 @@ public class Container<T> {
         head.next = node;
         //Если список пустой, и первой вызвалась функция добавления элемента в начало очереди, нужно проинициализировать
         //tail
-        if(size == 0) {
+        if (size == 0) {
             tail = node;
         }
         size++;
     }
-    public void replaceAt(T element, int index){
+
+    public void addFirstAll(T... values) {
+        for (T value : values) {
+            addFirst(value);
+        }
+    }
+
+    public void addAll(T... values) {
+        for (T value : values) {
+            add(value);
+        }
+    }
+
+    public void replaceAt(T element, int index) {
         System.out.println("public void replaceAt(T element, int index)");
         Node node = findNode(index);
         node.value = element;
     }
-    private Node findNode(int index){
+
+    private Node findNode(int index) {
         System.out.println("private Node findNode(int index)");
-        if(index < 0 || index >= size){
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("out of capacity");//todo
         }
         Node temp = head.next;
-        while (index!=0){
+        while (index != 0) {
             temp = temp.next;
             index--;
         }
         return temp;
     }
 
-    public Integer getSize(){
+    public Integer getSize() {
         System.out.println("public Integer getSize()");
         return size;
+    }
+
+    public T get(int i) {
+        return findNode(i).value;
     }
 
     @Override
