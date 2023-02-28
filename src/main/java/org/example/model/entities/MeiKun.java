@@ -8,6 +8,7 @@ public class MeiKun extends Cat{
 
     @Override
     public void eat() {
-        System.out.println("Mei Kun is eating");
+        super.eat();
+        System.out.println("\tMei Kun is eating");
     }
 }

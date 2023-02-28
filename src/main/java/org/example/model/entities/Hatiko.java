@@ -8,7 +8,7 @@ public class Hatiko extends ShibaInu{
     @Override
     public void eat() {
         super.eat();
-        System.out.println("Hatiko is eating");
+        System.out.println("\t\tHatiko is eating");
     }
 
     public void waiting(){

@@ -3,37 +3,10 @@ package org.example.model;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Objects;
+import java.util.function.Consumer;
 
-public class Container<T>{
+public class Container<T> {
 
-
-    public T delete(T value) {
-        Node temp = head;
-        while (temp.next!=null){
-            if(temp.next.value.equals(value)){
-                Node node = temp.next;
-                temp.next = temp.next.next;
-                size--;
-                return node.value;
-            }
-            temp = temp.next;
-        }
-        return null;
-    }
-
-    public T deleteAt(Integer index) {
-        if(index == 0 && size > 0){
-            Node node = head.next;
-            head.next = head.next.next;
-            size--;
-            return node.value;
-        }
-        Node node = findNode(index - 1);
-        Node res = node.next;
-        size--;
-        node.next = node.next.next;
-        return res.value;
-    }
 
     private class Node {
         private T value;
@@ -72,7 +45,7 @@ public class Container<T>{
     private Node tail;
     private int size;
 
-    Container() {
+    public Container() {
         System.out.println("Container()");
         head = new Node();
         tail = head;
@@ -92,6 +65,14 @@ public class Container<T>{
         tail.next = new Node(element);
         tail = tail.next;
         size++;
+    }
+
+    public void forEach(Consumer<T> runnable){
+        Node node = head.next;
+        while (node!=null){
+            runnable.accept(node.value);
+            node = node.next;
+        }
     }
 
     //Вставка в середину списка
@@ -128,12 +109,6 @@ public class Container<T>{
         size++;
     }
 
-    public void addFirstAll(T... values) {
-        for (T value : values) {
-            addFirst(value);
-        }
-    }
-
     public void addAll(T... values) {
         for (T value : values) {
             add(value);
@@ -166,6 +141,26 @@ public class Container<T>{
 
     public T get(int i) {
         return findNode(i).value;
+    }
+
+    public T deleteAt(Integer index) {
+        if (index == 0 && size > 0) {
+            Node node = head.next;
+            head.next = head.next.next;
+            size--;
+            return node.value;
+        }
+        Node node = findNode(index - 1);
+        Node res = node.next;
+        size--;
+        node.next = node.next.next;
+        return res.value;
+    }
+
+    public void clear(){
+        head.next = null;
+        size = 0;
+        tail = head;
     }
 
     @Override

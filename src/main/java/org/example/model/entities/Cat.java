@@ -6,7 +6,7 @@ public abstract class Cat implements Animal{
     public void eat() {
         System.out.println("Cat is eating");
     }
-    Cat(int age){
+    public Cat(int age){
         this.age = age;
     }
 
