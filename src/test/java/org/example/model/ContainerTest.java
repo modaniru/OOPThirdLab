@@ -62,17 +62,16 @@ class ContainerTest {
         //container.delete();
         assertEquals(3, container.getSize());
         assertEquals(new Container<Integer>(1, 2, 3), container);
-        container.delete(1);
+        container.deleteAt(0);
         assertEquals(2, container.getSize());
         assertEquals(new Container<Integer>(2, 3), container);
         container.deleteAt(1);
         assertEquals(1, container.getSize());
         assertEquals(new Container<Integer>(2), container);
-        container.delete(2);
+        container.deleteAt(0);
         assertEquals(0, container.getSize());
         assertEquals(new Container<Integer>(), container);
         assertThrows(IndexOutOfBoundsException.class, () -> container.deleteAt(0));
-        assertNull(container.delete(3131));
     }
 
     @Test

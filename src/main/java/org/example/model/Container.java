@@ -1,15 +1,21 @@
 package org.example.model;
 
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 public class Container<T> {
 
-
+    /**
+     * Узел, который используется в контейнере
+     */
     private class Node {
+        /**
+         * Значение узла
+         */
         private T value;
+        /**
+         * Ссылка на следующий элемент
+         */
         private Node next;
 
         Node(T value) {
@@ -20,8 +26,8 @@ public class Container<T> {
         Node() {
             System.out.println("Node()");
         }
-        //for tests
 
+        //for tests
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -41,17 +47,29 @@ public class Container<T> {
         }
     }
 
-    private Node head;
+    private final Node head;
     private Node tail;
     private int size;
 
+    /**
+     * no-args
+     */
     public Container() {
-        System.out.println("Container()");
+        System.out.println("public Container()");
         head = new Node();
         tail = head;
     }
 
-    Container(T... values) {
+    /**
+     * Конструктор с изначальной инициализацией содержимого контейнера
+     * Асимптотика:
+     * Время: O(1)
+     * Память: O(1)
+     *
+     * @param values
+     */
+    public Container(T... values) {
+        System.out.println("public Container(T... values)");
         head = new Node();
         tail = head;
         for (T value : values) {
@@ -59,7 +77,13 @@ public class Container<T> {
         }
     }
 
-    //Вставка в конец списка
+    /**
+     * Добавляет элемент в конец списка
+     *
+     * @param element Асимптотика:
+     *                Время: O(1)
+     *                Память: O(1)
+     */
     public void add(T element) {
         System.out.println("public void add(T element)");
         tail.next = new Node(element);
@@ -67,15 +91,32 @@ public class Container<T> {
         size++;
     }
 
-    public void forEach(Consumer<T> runnable){
+    /**
+     * Перебирает все элементы контейнера, принимая на вход фукнцию
+     * Асимптотика:
+     * Время: O(n)
+     * Память: O(1)
+     *
+     * @param runnable функция
+     */
+    public void forEach(Consumer<T> runnable) {
+        System.out.println("public void forEach(Consumer<T> runnable)");
         Node node = head.next;
-        while (node!=null){
+        while (node != null) {
             runnable.accept(node.value);
             node = node.next;
         }
     }
 
-    //Вставка в середину списка
+    /**
+     * Вставка элемента в середину списка по псевдо-индексу
+     * Асимптотика:
+     * Время: O(n)
+     * Память: O(1)
+     *
+     * @param element
+     * @param index
+     */
     public void add(T element, int index) {
         System.out.println("public void add(T element, int index)");
         if (index == 0 && size > 0) {
@@ -95,32 +136,64 @@ public class Container<T> {
         preNode.next = node;
     }
 
-    //Вставка в начало списка
+    /**
+     * Добавление в начало списка элемента
+     * Асимптотика:
+     * Время: O(1)
+     * Память: O(1)
+     *
+     * @param element
+     */
     public void addFirst(T element) {
         System.out.println("public void addFirst(T element)");
         Node node = new Node(element);
         node.next = head.next;
         head.next = node;
-        //Если список пустой, и первой вызвалась функция добавления элемента в начало очереди, нужно проинициализировать
-        //tail
         if (size == 0) {
             tail = node;
         }
         size++;
     }
 
+    /**
+     * Добавляет несколько значений в список
+     * Асимптотика:
+     * Время: O(n)
+     * Память: O(1)
+     *
+     * @param values
+     */
     public void addAll(T... values) {
+        System.out.println("public void addAll(T... values)");
         for (T value : values) {
             add(value);
         }
     }
 
+    /**
+     * Заменяет значение поля value Node под псевдо-индесом
+     * Асимптотика:
+     * Время: O(n)
+     * Память: O(1)
+     *
+     * @param element
+     * @param index
+     */
     public void replaceAt(T element, int index) {
         System.out.println("public void replaceAt(T element, int index)");
         Node node = findNode(index);
         node.value = element;
     }
 
+    /**
+     * Приватный метод, возвращающий Node под заданным псевдо-индексом
+     * Асимптотика:
+     * Время: O(n)
+     * Память: O(1)
+     *
+     * @param index
+     * @return Node
+     */
     private Node findNode(int index) {
         System.out.println("private Node findNode(int index)");
         if (index < 0 || index >= size) {
@@ -134,16 +207,41 @@ public class Container<T> {
         return temp;
     }
 
+    /**
+     * Возвращает текущий размер списка
+     *
+     * @return size
+     */
     public Integer getSize() {
         System.out.println("public Integer getSize()");
         return size;
     }
 
-    public T get(int i) {
-        return findNode(i).value;
+    /**
+     * Возвращает объект, под псеводо-индексом index
+     * Асимптотика:
+     * Время: O(n)
+     * Память: O(1)
+     *
+     * @param index
+     * @return Объект класса T
+     */
+    public T get(int index) {
+        System.out.println("public T get(int index)");
+        return findNode(index).value;
     }
 
+    /**
+     * Удаляет узел под заданным индексом, возвращая значение поля value этого узла
+     * Асимптотика:
+     * Время: O(n)
+     * Память: O(1)
+     *
+     * @param index
+     * @return Объект класса T
+     */
     public T deleteAt(Integer index) {
+        System.out.println("public T deleteAt(Integer index)");
         if (index == 0 && size > 0) {
             Node node = head.next;
             head.next = head.next.next;
@@ -157,12 +255,22 @@ public class Container<T> {
         return res.value;
     }
 
-    public void clear(){
+    /**
+     * Очищает контейнер путем установки head.next = null
+     * Асимптотика:
+     * Время: O(1)
+     * Память: O(1)
+     *
+     * @return void
+     */
+    public void clear() {
+        System.out.println("public void clear()");
         head.next = null;
         size = 0;
         tail = head;
     }
 
+    //for tests
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
