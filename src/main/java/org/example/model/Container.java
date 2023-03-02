@@ -1,9 +1,10 @@
 package org.example.model;
 
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class Container<T> {
+public class Container<T> implements Iterable<T> {
 
     /**
      * Узел, который используется в контейнере
@@ -46,9 +47,27 @@ public class Container<T> {
             return result;
         }
     }
+    private class ContainerIterator implements Iterator<T>{
+        private Node current;
+        ContainerIterator(Node head){
+            current = head;
+        }
+        @Override
+        public boolean hasNext() {
+            return current!=null;
+        }
+
+        @Override
+        public T next() {
+            T value = current.value;
+            current = current.next;
+            return value;
+        }
+    }
 
     private final Node head;
     private Node tail;
+    private Node tempNode;
     private int size;
 
     /**
@@ -57,6 +76,7 @@ public class Container<T> {
     public Container() {
         System.out.println("public Container()");
         head = new Node();
+        tempNode = head.next;
         tail = head;
     }
 
@@ -71,10 +91,16 @@ public class Container<T> {
     public Container(T... values) {
         System.out.println("public Container(T... values)");
         head = new Node();
+        tempNode = head.next;
         tail = head;
         for (T value : values) {
             add(value);
         }
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new ContainerIterator(head.next);
     }
 
     /**
@@ -89,23 +115,6 @@ public class Container<T> {
         tail.next = new Node(element);
         tail = tail.next;
         size++;
-    }
-
-    /**
-     * Перебирает все элементы контейнера, принимая на вход фукнцию
-     * Асимптотика:
-     * Время: O(n)
-     * Память: O(1)
-     *
-     * @param runnable функция
-     */
-    public void forEach(Consumer<T> runnable) {
-        System.out.println("public void forEach(Consumer<T> runnable)");
-        Node node = head.next;
-        while (node != null) {
-            runnable.accept(node.value);
-            node = node.next;
-        }
     }
 
     /**
@@ -266,6 +275,7 @@ public class Container<T> {
     public void clear() {
         System.out.println("public void clear()");
         head.next = null;
+        tempNode = head.next;
         size = 0;
         tail = head;
     }
